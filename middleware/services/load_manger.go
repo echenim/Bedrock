@@ -1,4 +1,4 @@
-package main
+package services
 
 import (
 	"flag"
@@ -9,11 +9,10 @@ import (
 	"sync"
 	"time"
 
-	"github.com/echenim/ibu/middleware/models"
-	"github.com/echenim/ibu/middleware/services"
+	"github.com/echenim/ibu/core/models"
 )
 
-func main() {
+func NewLoadManager() {
 	startTime := time.Now()
 	var done sync.WaitGroup
 	results := make(map[int]*models.Result)
@@ -23,13 +22,13 @@ func main() {
 
 	go func() {
 		_ = <-signalChannel
-		services.PrintResults(results, startTime)
+		PrintResults(results, startTime)
 		os.Exit(0)
 	}()
 
 	flag.Parse()
 
-	configuration := services.NewConfiguration()
+	configuration := NewConfiguration()
 
 	goMaxProcs := os.Getenv("GOMAXPROCS")
 
@@ -37,15 +36,15 @@ func main() {
 		runtime.GOMAXPROCS(runtime.NumCPU())
 	}
 
-	fmt.Printf("Dispatching %d clients\n", services.Klients)
+	fmt.Printf("Dispatching %d clients\n", Klients)
 
-	done.Add(services.Klients)
-	for i := 0; i < services.Klients; i++ {
+	done.Add(Klients)
+	for i := 0; i < Klients; i++ {
 		result := &models.Result{}
 		results[i] = result
-		go services.Client(configuration, result, &done)
+		go Client(configuration, result, &done)
 	}
 	fmt.Println("Waiting for results...")
 	done.Wait()
-	services.PrintResults(results, startTime)
+	PrintResults(results, startTime)
 }

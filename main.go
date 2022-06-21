@@ -1,4 +1,4 @@
-package core
+package main
 
 import (
 	"bufio"
@@ -10,10 +10,13 @@ import (
 	"log"
 	"net"
 	"os"
+	"os/signal"
+	"runtime"
 	"sync"
+	"sync/atomic"
 	"time"
 
-	"github.com/echenim/core/models"
+	"github.com/valyala/fasthttp"
 )
 
 var (
@@ -29,6 +32,54 @@ var (
 	authHeader       string
 )
 
+type Configuration struct {
+	urls       []string
+	method     string
+	postData   []byte
+	requests   int64
+	period     int64
+	keepAlive  bool
+	authHeader string
+
+	myClient fasthttp.Client
+}
+
+type Result struct {
+	requests      int64
+	success       int64
+	networkFailed int64
+	badFailed     int64
+}
+
+var (
+	readThroughput  int64
+	writeThroughput int64
+)
+
+type MyConn struct {
+	net.Conn
+}
+
+func (this *MyConn) Read(b []byte) (n int, err error) {
+	len, err := this.Conn.Read(b)
+
+	if err == nil {
+		atomic.AddInt64(&readThroughput, int64(len))
+	}
+
+	return len, err
+}
+
+func (this *MyConn) Write(b []byte) (n int, err error) {
+	len, err := this.Conn.Write(b)
+
+	if err == nil {
+		atomic.AddInt64(&writeThroughput, int64(len))
+	}
+
+	return len, err
+}
+
 func init() {
 	flag.Int64Var(&requests, "r", -1, "Number of requests per client")
 	flag.IntVar(&clients, "c", 100, "Number of concurrent clients")
@@ -42,7 +93,7 @@ func init() {
 	flag.StringVar(&authHeader, "auth", "", "Authorization header")
 }
 
-func printResults(results map[int]*models.Result, startTime time.Time) {
+func printResults(results map[int]*Result, startTime time.Time) {
 	var requests int64
 	var success int64
 	var networkFailed int64
@@ -240,4 +291,41 @@ func client(configuration *Configuration, result *Result, done *sync.WaitGroup) 
 	}
 
 	done.Done()
+}
+
+func main() {
+	startTime := time.Now()
+	var done sync.WaitGroup
+	results := make(map[int]*Result)
+
+	signalChannel := make(chan os.Signal, 2)
+	signal.Notify(signalChannel, os.Interrupt)
+	go func() {
+		_ = <-signalChannel
+		printResults(results, startTime)
+		os.Exit(0)
+	}()
+
+	flag.Parse()
+
+	configuration := NewConfiguration()
+
+	goMaxProcs := os.Getenv("GOMAXPROCS")
+
+	if goMaxProcs == "" {
+		runtime.GOMAXPROCS(runtime.NumCPU())
+	}
+
+	fmt.Printf("Dispatching %d clients\n", clients)
+
+	done.Add(clients)
+	for i := 0; i < clients; i++ {
+		result := &Result{}
+		results[i] = result
+		go client(configuration, result, &done)
+
+	}
+	fmt.Println("Waiting for results...")
+	done.Wait()
+	printResults(results, startTime)
 }
