@@ -1,8 +1,8 @@
 package models
 
 type Result struct {
-	requests      int64
-	success       int64
-	networkFailed int64
-	badFailed     int64
+	Requests      int64
+	Success       int64
+	NetworkFailed int64
+	BadFailed     int64
 }

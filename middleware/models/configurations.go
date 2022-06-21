@@ -5,13 +5,13 @@ import (
 )
 
 type Configuration struct {
-	urls       []string
-	method     string
-	postData   []byte
-	requests   int64
-	period     int64
-	keepAlive  bool
-	authHeader string
+	Urls       []string
+	Method     string
+	PostData   []byte
+	Requests   int64
+	Period     int64
+	KeepAlive  bool
+	AuthHeader string
 
-	client fasthttp.Client
+	Client fasthttp.Client
 }

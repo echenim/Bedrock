@@ -13,14 +13,14 @@ import (
 	"sync"
 	"time"
 
-	"github.com/echenim/core/models"
+	"github.com/echenim/ibu/middleware/models"
 	"github.com/valyala/fasthttp"
 )
 
 var (
 	requests         int64
 	period           int64
-	Klients          int
+	klients          int
 	url              string
 	urlsFilePath     string
 	keepAlive        bool
@@ -32,7 +32,7 @@ var (
 
 func init() {
 	flag.Int64Var(&requests, "r", -1, "Number of requests per client")
-	flag.IntVar(&Klients, "c", 100, "Number of concurrent clients")
+	flag.IntVar(&klients, "c", 100, "Number of concurrent clients")
 	flag.StringVar(&url, "u", "", "URL")
 	flag.StringVar(&urlsFilePath, "f", "", "URL's file path (line seperated)")
 	flag.BoolVar(&keepAlive, "k", true, "Do HTTP keep-alive")
@@ -43,17 +43,16 @@ func init() {
 	flag.StringVar(&authHeader, "auth", "", "Authorization header")
 }
 
-func PrintResults(results map[int]*models.Result, startTime time.Time) {
+func echoResults(results map[int]*models.Result, startTime time.Time) {
 	var requests int64
 	var success int64
 	var networkFailed int64
 	var badFailed int64
 
 	for _, result := range results {
-		requests += result.requests
-		success += result.success
-		networkFailed += result.networkFailed
-		badFailed += result.badFailed
+		requests += result.Success
+		networkFailed += result.NetworkFailed
+		badFailed += result.BadFailed
 	}
 
 	elapsed := int64(time.Since(startTime).Seconds())
@@ -101,7 +100,7 @@ func readLines(path string) (lines []string, err error) {
 	return
 }
 
-func NewConfiguration() *models.Configuration {
+func newConfig() *models.Configuration {
 	if urlsFilePath == "" && url == "" {
 		flag.Usage()
 		os.Exit(1)
@@ -120,16 +119,16 @@ func NewConfiguration() *models.Configuration {
 	}
 
 	configuration := &models.Configuration{
-		urls:       make([]string, 0),
-		method:     "GET",
-		postData:   nil,
-		keepAlive:  keepAlive,
-		requests:   int64((1 << 63) - 1),
-		authHeader: authHeader,
+		Urls:       make([]string, 0),
+		Method:     "GET",
+		PostData:   nil,
+		KeepAlive:  keepAlive,
+		Requests:   int64((1 << 63) - 1),
+		AuthHeader: authHeader,
 	}
 
 	if period != -1 {
-		configuration.period = period
+		configuration.Period = period
 
 		timeout := make(chan bool, 1)
 		go func() {
@@ -150,7 +149,7 @@ func NewConfiguration() *models.Configuration {
 	}
 
 	if requests != -1 {
-		configuration.requests = requests
+		configuration.Requests = requests
 	}
 
 	if urlsFilePath != "" {
@@ -159,83 +158,83 @@ func NewConfiguration() *models.Configuration {
 			log.Fatalf("Error in ioutil.ReadFile for file: %s Error: ", urlsFilePath, err)
 		}
 
-		configuration.urls = fileLines
+		configuration.Urls = fileLines
 	}
 
 	if url != "" {
-		configuration.urls = append(configuration.urls, url)
+		configuration.Urls = append(configuration.Urls, url)
 	}
 
 	if postDataFilePath != "" {
-		configuration.method = "POST"
+		configuration.Method = "POST"
 
 		data, err := ioutil.ReadFile(postDataFilePath)
 		if err != nil {
 			log.Fatalf("Error in ioutil.ReadFile for file path: %s Error: ", postDataFilePath, err)
 		}
 
-		configuration.postData = data
+		configuration.PostData = data
 	}
 
-	configuration.myClient.ReadTimeout = time.Duration(readTimeout) * time.Millisecond
-	configuration.myClient.WriteTimeout = time.Duration(writeTimeout) * time.Millisecond
-	configuration.myClient.MaxConnsPerHost = clients
+	configuration.Client.ReadTimeout = time.Duration(readTimeout) * time.Millisecond
+	configuration.Client.WriteTimeout = time.Duration(writeTimeout) * time.Millisecond
+	configuration.Client.MaxConnsPerHost = klients
 
-	configuration.myClient.Dial = MyDialer()
+	configuration.Client.Dial = dialer()
 
 	return configuration
 }
 
-func MyDialer() func(address string) (conn net.Conn, err error) {
+func dialer() func(address string) (conn net.Conn, err error) {
 	return func(address string) (net.Conn, error) {
 		conn, err := net.Dial("tcp", address)
 		if err != nil {
 			return nil, err
 		}
 
-		myConn := &models.Conn{Conn: conn}
+		con := &models.Conn{Conn: conn}
 
-		return myConn, nil
+		return con, nil
 	}
 }
 
-func Client(configuration *models.Configuration, result *models.Result, done *sync.WaitGroup) {
-	for result.requests < configuration.requests {
-		for _, tmpUrl := range configuration.urls {
+func client(configuration *models.Configuration, result *models.Result, done *sync.WaitGroup) {
+	for result.Requests < configuration.Requests {
+		for _, tmpUrl := range configuration.Urls {
 
 			req := fasthttp.AcquireRequest()
 
 			req.SetRequestURI(tmpUrl)
-			req.Header.SetMethodBytes([]byte(configuration.method))
+			req.Header.SetMethodBytes([]byte(configuration.Method))
 
-			if configuration.keepAlive == true {
+			if configuration.KeepAlive == true {
 				req.Header.Set("Connection", "keep-alive")
 			} else {
 				req.Header.Set("Connection", "close")
 			}
 
-			if len(configuration.authHeader) > 0 {
-				req.Header.Set("Authorization", configuration.authHeader)
+			if len(configuration.AuthHeader) > 0 {
+				req.Header.Set("Authorization", configuration.AuthHeader)
 			}
 
-			req.SetBody(configuration.postData)
+			req.SetBody(configuration.PostData)
 
 			resp := fasthttp.AcquireResponse()
-			err := configuration.myClient.Do(req, resp)
+			err := configuration.Client.Do(req, resp)
 			statusCode := resp.StatusCode()
-			result.requests++
+			result.Requests++
 			fasthttp.ReleaseRequest(req)
 			fasthttp.ReleaseResponse(resp)
 
 			if err != nil {
-				result.networkFailed++
+				result.NetworkFailed++
 				continue
 			}
 
 			if statusCode == fasthttp.StatusOK {
-				result.success++
+				result.Success++
 			} else {
-				result.badFailed++
+				result.BadFailed++
 			}
 		}
 	}

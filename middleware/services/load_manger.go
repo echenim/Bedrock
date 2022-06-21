@@ -9,26 +9,26 @@ import (
 	"sync"
 	"time"
 
-	"github.com/echenim/ibu/core/models"
+	"github.com/echenim/ibu/middleware/models"
 )
 
 func NewLoadManager() {
 	startTime := time.Now()
-	var done sync.WaitGroup
+	var wg sync.WaitGroup
 	results := make(map[int]*models.Result)
 
-	signalChannel := make(chan os.Signal, 2)
-	signal.Notify(signalChannel, os.Interrupt)
+	ch := make(chan os.Signal, 2)
+	signal.Notify(ch, os.Interrupt)
 
 	go func() {
-		_ = <-signalChannel
-		PrintResults(results, startTime)
+		_ = <-ch
+		echoResults(results, startTime)
 		os.Exit(0)
 	}()
 
 	flag.Parse()
 
-	configuration := NewConfiguration()
+	configuration := newConfig()
 
 	goMaxProcs := os.Getenv("GOMAXPROCS")
 
@@ -36,15 +36,15 @@ func NewLoadManager() {
 		runtime.GOMAXPROCS(runtime.NumCPU())
 	}
 
-	fmt.Printf("Dispatching %d clients\n", Klients)
+	fmt.Printf("Dispatching %d clients\n", klients)
 
-	done.Add(Klients)
-	for i := 0; i < Klients; i++ {
+	wg.Add(klients)
+	for i := 0; i < klients; i++ {
 		result := &models.Result{}
 		results[i] = result
-		go Client(configuration, result, &done)
+		go client(configuration, result, &wg)
 	}
 	fmt.Println("Waiting for results...")
-	done.Wait()
-	PrintResults(results, startTime)
+	wg.Wait()
+	echoResults(results, startTime)
 }
