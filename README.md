@@ -1,4 +1,2 @@
-# ibu
-
-
-go run main.go  -k=true -u https://www.google.com -c 500 -t 10  
+# Smart Contract Deployment Tool 
+This tool is essential for developers in the DeFi space, simplifying and streamlining the deployment process, thereby reducing errors and enhancing efficiency.
