@@ -9,31 +9,121 @@
 Production-grade Byzantine Fault Tolerant (BFT) protocol node engineered
 for adversarial environments.
 
+Bedrock enforces a strict architectural separation between:
+
+- Go-based control plane (consensus, networking, orchestration)
+- Rust-based deterministic execution engine compiled to WASM
+- Wasmtime sandbox with strict host function API
+
+Consensus never mutates state directly. Execution never touches
+networking.
+
 ------------------------------------------------------------------------
 
 # Abstract
 
 Bedrock is a full-stack BFT protocol node implementing a
 HotStuff/Tendermint-style consensus protocol with deterministic
-execution and adversarial networking assumptions. It is designed to
-tolerate ≤ 1/3 Byzantine validators while preserving safety and ensuring
-liveness recovery after partitions.
+execution and adversarial networking assumptions.
 
-This repository contains:
+It tolerates ≤ 1/3 Byzantine validators while preserving safety and
+ensuring liveness recovery after partitions.
 
-- Consensus engine
-- Deterministic state machine (WASM-based)
-- P2P networking stack
-- Mempool policy engine
-- Snapshot synchronization
-- Multi-region deployment stack
-- Fault-injection and deterministic replay harness
+Execution is treated as a pure function:
+
+    f(previous_state_root, block) → new_state_root
+
+------------------------------------------------------------------------
+
+# Polyglot Architecture
+
+``` mermaid
+flowchart LR
+    subgraph Go_Control_Plane
+        RPC
+        Mempool
+        Consensus
+        Networking
+        Snapshot
+    end
+
+    subgraph WASM_Sandbox
+        Wasmtime
+        HostAPI
+    end
+
+    subgraph Rust_Execution_Core
+        StateMachine
+        MerkleTree
+        Crypto
+    end
+
+    Consensus --> Wasmtime
+    Wasmtime --> StateMachine
+    StateMachine --> MerkleTree
+    MerkleTree --> Consensus
+```
+
+## Go (Control Plane)
+
+Responsible for:
+
+- RPC layer
+- Mempool engine
+- BFT consensus
+- Validator coordination
+- P2P networking (libp2p + QUIC)
+- Snapshot orchestration
+- Observability & metrics
+
+## Rust (Execution Core)
+
+Responsible for:
+
+- Deterministic transaction execution
+- Merkle state updates
+- Cryptographic operations (BLS / Ed25519 / hashing)
+- State commitment calculation
+
+## WASM Sandbox Boundary
+
+Rust execution is compiled to WASM and executed inside Wasmtime.
+
+The sandbox:
+
+- Enforces deterministic behavior
+- Prevents OS access
+- Restricts syscalls
+- Exposes strict host API
+- Prevents memory corruption across layers
+
+------------------------------------------------------------------------
+
+# Execution Boundary Contract
+
+Consensus communicates with execution via a strict contract.
+
+ExecutionRequest:
+
+- Previous state root
+- Block payload
+- Execution context
+
+ExecutionResponse:
+
+- New state root
+- Receipt set
+- Gas usage
+- Events
+- Success / failure flag
+
+No shared memory.\
+No implicit state mutation.\
+All state transitions happen inside the WASM sandbox.
 
 ------------------------------------------------------------------------
 
 # System Architecture
-
-## High-Level Overview
 
 ``` mermaid
 flowchart LR
@@ -41,28 +131,30 @@ flowchart LR
     RPC --> Mempool
     Mempool --> Consensus
     Consensus --> BlockBuilder
-    BlockBuilder --> StateMachine
-    StateMachine --> Storage
+    BlockBuilder --> WASMExecutor
+    WASMExecutor --> StateMachine
+    StateMachine --> MerkleUpdate
+    MerkleUpdate --> Storage
     Consensus --> Networking
     Networking --> Peers
 ```
 
 Subsystems:
 
-1. RPC Layer
-2. Mempool Engine
-3. BFT Consensus Engine
-4. Block Builder
-5. Deterministic State Machine
-6. Storage Layer
-7. P2P Networking
-8. Snapshot Sync
-9. Observability
-10. Deployment & Infra
+1. RPC Layer (Go)
+2. Mempool Engine (Go)
+3. BFT Consensus Engine (Go)
+4. Block Builder (Go)
+5. WASM Runtime (Wasmtime)
+6. Deterministic State Machine (Rust → WASM)
+7. Storage Layer (RocksDB)
+8. P2P Networking (Go)
+9. Snapshot Sync (Go)
+10. Observability (Go)
 
 ------------------------------------------------------------------------
 
-# Consensus Design
+# Consensus Design (Go)
 
 HotStuff/Tendermint-inspired rotating proposer protocol.
 
@@ -82,23 +174,38 @@ Byzantine.
 
 Liveness Guarantee:
 
-The system resumes finality automatically once network partitions heal.
+Finality resumes automatically once partitions heal.
+
+Consensus commits blocks only after execution returns a verified state
+root.
 
 ------------------------------------------------------------------------
 
-# Deterministic Execution
-
-Execution is WASM-based (Wasmtime).
-
-Pipeline:
+# Deterministic Execution (Rust → WASM)
 
 ``` mermaid
 flowchart TD
-    Block --> WASMExecutor
-    WASMExecutor --> StateTransition
-    StateTransition --> MerkleUpdate
+    Block --> Wasmtime
+    Wasmtime --> HostAPI
+    HostAPI --> StateReadWrite
+    StateReadWrite --> MerkleUpdate
     MerkleUpdate --> NewStateRoot
 ```
+
+Strict Host API exposes only:
+
+- Read state key
+- Write state key
+- Emit event
+- Consume gas
+- Access block metadata
+
+Disallowed:
+
+- System clock
+- Filesystem
+- Network access
+- OS randomness
 
 Key Properties:
 
@@ -106,11 +213,10 @@ Key Properties:
 - Merkleized state
 - Snapshot export/import
 - Deterministic replay testing
-- No system clock dependency
 
 ------------------------------------------------------------------------
 
-# Networking Model
+# Networking Model (Go)
 
 Built with libp2p over QUIC.
 
@@ -118,16 +224,9 @@ Features:
 
 - Kademlia-like peer discovery
 - Gossip-based block & vote propagation
-- Peer scoring & reputation decay
+- Peer scoring
 - Rate limiting
 - Anti-eclipse protections
-
-Adversarial assumptions:
-
-- Message reordering
-- Message duplication
-- Partial partitions
-- Malicious peers
 
 ------------------------------------------------------------------------
 
@@ -160,39 +259,12 @@ Backed by RocksDB.
 
 ------------------------------------------------------------------------
 
-# Observability
-
-- Prometheus metrics
-- Grafana dashboards
-- OpenTelemetry traces
-- Structured logging
-
-Tracked Metrics:
-
-- Finality latency
-- Proposal latency
-- Fork rate
-- Bandwidth per node
-- Peer churn rate
-
-------------------------------------------------------------------------
-
-# Benchmarks (Testnet Measurements)
-
-Environment:
-
-- Multi-region (AWS + GCP)
-- 4--7 validators
-- QUIC transport
-- 100--500 tx/sec synthetic load
-
-Results:
+# Benchmarks
 
 - Deterministic finality under ≥1/3 Byzantine simulation
-- Stable finality latency under adversarial vote delays
 - Zero safety violations under fault injection
 - Partition recovery without manual intervention
-- Reduced bootstrap time via snapshot sync (\~60%)
+- Identical state roots across replay tests
 
 ------------------------------------------------------------------------
 
@@ -209,71 +281,27 @@ Does Not Assume:
 
 - Global clock synchronization
 - Honest majority beyond BFT threshold
-- Perfect network conditions
-
-------------------------------------------------------------------------
-
-# Security Policy
-
-Security is treated as a first-class design constraint.
-
-Reporting Vulnerabilities:
-
-- Submit via private security contact (TBD)
-- Include reproduction steps
-- Include logs & configuration
-
-Non-goals:
-
-- Tolerance beyond BFT threshold
-- Protection against \>1/3 coordinated Byzantine validators
-
-------------------------------------------------------------------------
-
-# Roadmap
-
-Phase 1 (Completed):
-
-- Core consensus engine
-- Deterministic execution
-- Snapshot synchronization
-- Multi-region testnet
-- Fault-injection harness
-
-Phase 2:
-
-- Dynamic validator set updates
-- Slashing conditions
-- Formal verification of safety invariants
-- Load testing beyond 1k tx/sec
-- Public testnet documentation
-
-Phase 3:
-
-- Production hardening
-- Persistent peer identity layer
-- Advanced mempool economics
-- zk-proof-ready state commitments
 
 ------------------------------------------------------------------------
 
 # Development
 
-Core Languages:
+Control Plane:
 
 - Go
-- Rust
-
-State & Execution:
-
-- Wasmtime (WASM)
-- Merkle Trees
-- RocksDB
-
-Networking:
-
 - libp2p
 - QUIC
+
+Execution Core:
+
+- Rust
+- Wasmtime
+- Merkle Trees
+- BLS / Ed25519
+
+Storage:
+
+- RocksDB
 
 Infra:
 
@@ -286,23 +314,6 @@ Infra:
 
 ------------------------------------------------------------------------
 
-# Contributing
-
-Contributions should:
-
-- Preserve deterministic execution
-- Maintain safety invariants
-- Include fault-injection tests
-- Include benchmarks where applicable
-
-Before submitting PR:
-
-1. Run deterministic replay harness
-2. Run Byzantine simulation tests
-3. Verify no state root divergence
-
-------------------------------------------------------------------------
-
 # License
 
-Apache 2.0 (recommended)
+Apache 2.0
