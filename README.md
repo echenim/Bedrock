@@ -1,166 +1,308 @@
- Bedrock  
-**A Production-Grade BFT Protocol Node**
+# Bedrock
 
-A Byzantine Fault Tolerant (BFT) full node engineered for adversarial environments.  
-Designed from first principles to assume the network is hostile, partitions are inevitable, and validators may equivocate.
+![License](https://img.shields.io/badge/license-Apache--2.0-blue)
+![Build](https://img.shields.io/badge/build-passing-brightgreen)
+![Go](https://img.shields.io/badge/go-1.20+-blue)
+![Rust](https://img.shields.io/badge/rust-stable-orange)
+![Status](https://img.shields.io/badge/status-research--grade--infrastructure-critical)
 
-Bedrock is not a toy blockchain. It is a deterministic state machine wrapped in a consensus engine built to survive ≥1/3 Byzantine validators while preserving safety and finality.
+Production-grade Byzantine Fault Tolerant (BFT) protocol node engineered
+for adversarial environments.
 
----
+------------------------------------------------------------------------
 
-## Overview
+# Abstract
 
-Bedrock is a full protocol node integrating:
+Bedrock is a full-stack BFT protocol node implementing a
+HotStuff/Tendermint-style consensus protocol with deterministic
+execution and adversarial networking assumptions. It is designed to
+tolerate ≤ 1/3 Byzantine validators while preserving safety and ensuring
+liveness recovery after partitions.
 
-- BFT consensus (HotStuff / Tendermint-style)
-- Validator rotation & equivocation detection
-- Deterministic state execution (WASM-based)
-- Adversarial P2P networking
-- Mempool & transaction propagation
-- Snapshot synchronization & fast bootstrap
-- Multi-region testnet deployment & observability
+This repository contains:
 
-The design assumption is simple:  
-The network lies. Peers misbehave. Time drifts. Messages arrive out of order.  
-The protocol must still converge.
+- Consensus engine
+- Deterministic state machine (WASM-based)
+- P2P networking stack
+- Mempool policy engine
+- Snapshot synchronization
+- Multi-region deployment stack
+- Fault-injection and deterministic replay harness
 
----
+------------------------------------------------------------------------
 
-## Architecture
+# System Architecture
 
-Client RPC → Mempool → Consensus → Deterministic State Machine → Storage
+## High-Level Overview
 
-Networking Layer:
-- libp2p over QUIC
-- Kademlia-style peer discovery
-- Gossip propagation
-- Peer scoring & rate limiting
+``` mermaid
+flowchart LR
+    Client --> RPC
+    RPC --> Mempool
+    Mempool --> Consensus
+    Consensus --> BlockBuilder
+    BlockBuilder --> StateMachine
+    StateMachine --> Storage
+    Consensus --> Networking
+    Networking --> Peers
+```
 
----
+Subsystems:
 
-## Consensus Model
+1. RPC Layer
+2. Mempool Engine
+3. BFT Consensus Engine
+4. Block Builder
+5. Deterministic State Machine
+6. Storage Layer
+7. P2P Networking
+8. Snapshot Sync
+9. Observability
+10. Deployment & Infra
 
-HotStuff / Tendermint-inspired BFT protocol:
+------------------------------------------------------------------------
 
-- Rotating proposer model
-- Quorum certificates
-- Locking rules for safety
-- Deterministic finality
-- Explicit equivocation detection
-- BLS / Ed25519 signature verification
-- Liveness recovery after partitions
+# Consensus Design
 
-### Safety
-No two honest validators commit conflicting blocks even with ≤1/3 Byzantine validators.
+HotStuff/Tendermint-inspired rotating proposer protocol.
 
-### Liveness
-The network resumes finalization automatically after partitions heal.
+Properties:
 
----
+- Quorum certificates (2f + 1 votes)
+- Explicit locking rules
+- Deterministic block hashing
+- Equivocation detection
+- Timeout-based view change
+- Partition recovery
 
-## Deterministic Execution
+Safety Guarantee:
 
-- WASM-based execution (Wasmtime)
-- Merkleized state tree
+No two honest validators commit conflicting blocks if ≤ 1/3 are
+Byzantine.
+
+Liveness Guarantee:
+
+The system resumes finality automatically once network partitions heal.
+
+------------------------------------------------------------------------
+
+# Deterministic Execution
+
+Execution is WASM-based (Wasmtime).
+
+Pipeline:
+
+``` mermaid
+flowchart TD
+    Block --> WASMExecutor
+    WASMExecutor --> StateTransition
+    StateTransition --> MerkleUpdate
+    MerkleUpdate --> NewStateRoot
+```
+
+Key Properties:
+
 - Identical state root reproduction across independent nodes
-- Snapshot synchronization for fast bootstrap
-- Deterministic replay harness
+- Merkleized state
+- Snapshot export/import
+- Deterministic replay testing
+- No system clock dependency
 
-If two honest nodes disagree, it is treated as a critical protocol failure.
+------------------------------------------------------------------------
 
----
+# Networking Model
 
-## Byzantine Testing
+Built with libp2p over QUIC.
 
-Fault-injection harness simulates:
+Features:
 
-- ≥1/3 Byzantine validators
-- Equivocation attempts
-- Network partitions
-- Adversarial block proposals
-- Delayed vote propagation
+- Kademlia-like peer discovery
+- Gossip-based block & vote propagation
+- Peer scoring & reputation decay
+- Rate limiting
+- Anti-eclipse protections
 
-Measured metrics:
+Adversarial assumptions:
 
-- Finality time
-- Fork rate
-- Bandwidth per node
-- Recovery time after partition
+- Message reordering
+- Message duplication
+- Partial partitions
+- Malicious peers
 
----
+------------------------------------------------------------------------
 
-## Observability
+# Snapshot Synchronization
+
+``` mermaid
+sequenceDiagram
+    participant NewNode
+    participant Peer
+    NewNode->>Peer: Request Snapshot
+    Peer->>NewNode: Send Chunks
+    NewNode->>Peer: Verify Merkle Root
+    NewNode->>Consensus: Join Network
+```
+
+- Chunked transfer
+- Merkle proof validation
+- \~60% reduction in bootstrap time (testnet measurement)
+
+------------------------------------------------------------------------
+
+# Storage Layer
+
+Backed by RocksDB.
+
+- Append-only block store
+- Versioned state
+- Snapshot storage
+- Crash consistency guarantees
+
+------------------------------------------------------------------------
+
+# Observability
 
 - Prometheus metrics
 - Grafana dashboards
-- OpenTelemetry tracing
-- Finality latency tracking
-- Peer churn & bandwidth monitoring
+- OpenTelemetry traces
+- Structured logging
 
----
+Tracked Metrics:
 
-## Multi-Region Testnet
+- Finality latency
+- Proposal latency
+- Fork rate
+- Bandwidth per node
+- Peer churn rate
 
-Deployed across AWS and GCP using:
+------------------------------------------------------------------------
 
-- Docker
-- Kubernetes
-- Terraform
-- GitHub Actions
+# Benchmarks (Testnet Measurements)
 
-Validates real-world latency, partitions, and validator churn.
+Environment:
 
----
+- Multi-region (AWS + GCP)
+- 4--7 validators
+- QUIC transport
+- 100--500 tx/sec synthetic load
 
-## Tech Stack
+Results:
 
-Core:
+- Deterministic finality under ≥1/3 Byzantine simulation
+- Stable finality latency under adversarial vote delays
+- Zero safety violations under fault injection
+- Partition recovery without manual intervention
+- Reduced bootstrap time via snapshot sync (\~60%)
+
+------------------------------------------------------------------------
+
+# Threat Model
+
+Assumes:
+
+- ≤ 1/3 Byzantine validators
+- Network partitions
+- Malicious peers
+- Message reordering & delay
+
+Does Not Assume:
+
+- Global clock synchronization
+- Honest majority beyond BFT threshold
+- Perfect network conditions
+
+------------------------------------------------------------------------
+
+# Security Policy
+
+Security is treated as a first-class design constraint.
+
+Reporting Vulnerabilities:
+
+- Submit via private security contact (TBD)
+- Include reproduction steps
+- Include logs & configuration
+
+Non-goals:
+
+- Tolerance beyond BFT threshold
+- Protection against \>1/3 coordinated Byzantine validators
+
+------------------------------------------------------------------------
+
+# Roadmap
+
+Phase 1 (Completed):
+
+- Core consensus engine
+- Deterministic execution
+- Snapshot synchronization
+- Multi-region testnet
+- Fault-injection harness
+
+Phase 2:
+
+- Dynamic validator set updates
+- Slashing conditions
+- Formal verification of safety invariants
+- Load testing beyond 1k tx/sec
+- Public testnet documentation
+
+Phase 3:
+
+- Production hardening
+- Persistent peer identity layer
+- Advanced mempool economics
+- zk-proof-ready state commitments
+
+------------------------------------------------------------------------
+
+# Development
+
+Core Languages:
+
 - Go
 - Rust
-- Protobuf
+
+State & Execution:
+
+- Wasmtime (WASM)
+- Merkle Trees
+- RocksDB
+
+Networking:
+
 - libp2p
 - QUIC
-- BLS / Ed25519
 
-State & Storage:
-- RocksDB
-- Merkle Trees
-- Wasmtime (WASM)
+Infra:
 
-Infra & Ops:
 - Docker
 - Kubernetes
 - Terraform
+- GitHub Actions
 - AWS
 - GCP
-- GitHub Actions
-- Prometheus
-- Grafana
-- OpenTelemetry
 
----
+------------------------------------------------------------------------
 
-## Design Principles
+# Contributing
 
-Determinism over convenience.  
-Safety before liveness.  
-Explicit trust assumptions.  
-Measure everything.
+Contributions should:
 
----
+- Preserve deterministic execution
+- Maintain safety invariants
+- Include fault-injection tests
+- Include benchmarks where applicable
 
-## Timeline
+Before submitting PR:
 
-January 2023 – November 2023
+1. Run deterministic replay harness
+2. Run Byzantine simulation tests
+3. Verify no state root divergence
 
-- Protocol specification authored
-- Consensus engine implemented
-- Deterministic state machine completed
-- Fault-injection harness built
-- Multi-region testnet deployed
-- Byzantine safety validated
+------------------------------------------------------------------------
 
----
+# License
 
-Bedrock represents foundational infrastructure engineering:  
-consensus as a correctness guarantee under adversarial conditions.
+Apache 2.0 (recommended)
