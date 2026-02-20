@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"os"
+	"path/filepath"
 
 	"github.com/spf13/cobra"
 )
@@ -16,37 +17,14 @@ func main() {
 		Long:  "Byzantine Fault Tolerant protocol node with deterministic WASM execution",
 	}
 
-	rootCmd.AddCommand(startCmd())
-	rootCmd.AddCommand(initCmd())
+	rootCmd.AddCommand(newStartCmd())
+	rootCmd.AddCommand(newInitCmd())
+	rootCmd.AddCommand(newKeysCmd())
 	rootCmd.AddCommand(versionCmd())
 
 	if err := rootCmd.Execute(); err != nil {
 		fmt.Fprintln(os.Stderr, err)
 		os.Exit(1)
-	}
-}
-
-func startCmd() *cobra.Command {
-	return &cobra.Command{
-		Use:   "start",
-		Short: "Start the BedRock node",
-		RunE: func(cmd *cobra.Command, args []string) error {
-			// Placeholder — wired up in task 015
-			fmt.Println("bedrockd starting...")
-			return nil
-		},
-	}
-}
-
-func initCmd() *cobra.Command {
-	return &cobra.Command{
-		Use:   "init [moniker]",
-		Short: "Initialize node configuration",
-		Args:  cobra.ExactArgs(1),
-		RunE: func(cmd *cobra.Command, args []string) error {
-			fmt.Printf("Initializing node: %s\n", args[0])
-			return nil
-		},
 	}
 }
 
@@ -58,4 +36,13 @@ func versionCmd() *cobra.Command {
 			fmt.Printf("bedrockd v%s\n", version)
 		},
 	}
+}
+
+// defaultHome returns the default node home directory.
+func defaultHome() string {
+	home, err := os.UserHomeDir()
+	if err != nil {
+		return ".bedrockd"
+	}
+	return filepath.Join(home, ".bedrockd")
 }

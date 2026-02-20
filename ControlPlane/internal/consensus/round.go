@@ -220,7 +220,7 @@ func (e *Engine) persistCommit(block *types.Block, qc *types.QuorumCertificate) 
 	e.state.LastCommitQC = qc
 
 	// Notify subscribers.
-	evt := commitEvent{
+	evt := CommitEvent{
 		Block:     block,
 		QC:        qc,
 		StateRoot: stateRoot,

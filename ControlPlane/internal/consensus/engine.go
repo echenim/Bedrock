@@ -31,7 +31,7 @@ type Engine struct {
 	proposalCh  chan *types.Proposal
 	voteCh      chan *types.Vote
 	timeoutCh   chan timeoutEvent
-	commitCh    chan commitEvent
+	commitCh    chan CommitEvent
 	nextHeightCh chan struct{} // signals that a new height should start
 
 	// Lifecycle.
@@ -86,7 +86,7 @@ func NewEngine(cfg EngineConfig) (*Engine, error) {
 		proposalCh:   make(chan *types.Proposal, 16),
 		voteCh:       make(chan *types.Vote, 64),
 		timeoutCh:    make(chan timeoutEvent, 16),
-		commitCh:     make(chan commitEvent, 16),
+		commitCh:     make(chan CommitEvent, 16),
 		nextHeightCh: make(chan struct{}, 1),
 	}, nil
 }
@@ -119,7 +119,7 @@ func (e *Engine) Stop() error {
 }
 
 // SubscribeCommits returns a channel that receives committed blocks.
-func (e *Engine) SubscribeCommits() <-chan commitEvent {
+func (e *Engine) SubscribeCommits() <-chan CommitEvent {
 	return e.commitCh
 }
 

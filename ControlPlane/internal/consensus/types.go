@@ -58,8 +58,8 @@ type timeoutEvent struct {
 	Round  uint64
 }
 
-// commitEvent signals that a block has been committed.
-type commitEvent struct {
+// CommitEvent signals that a block has been committed.
+type CommitEvent struct {
 	Block     *types.Block
 	QC        *types.QuorumCertificate
 	StateRoot types.Hash
