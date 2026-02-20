@@ -1,0 +1,66 @@
+syntax = "proto3";
+
+package bedrock.execution.v1;
+
+option go_package = "github.com/echenim/Bedrock/controlplane/gen/proto/execution/v1;executionv1";
+
+// ExecutionRequest is sent from consensus to the execution engine.
+message ExecutionRequest {
+  uint32 api_version = 1;
+  bytes chain_id = 2;
+  uint64 block_height = 3;
+  uint64 block_time = 4;
+  bytes block_hash = 5;
+  bytes prev_state_root = 6;
+  repeated bytes transactions = 7;
+  ExecutionLimits limits = 8;
+  bytes execution_seed = 9;
+}
+
+// ExecutionLimits defines resource limits for a block execution.
+message ExecutionLimits {
+  uint64 gas_limit = 1;
+  uint32 max_events = 2;
+  uint32 max_write_bytes = 3;
+}
+
+// ExecutionResponse is returned from the execution engine.
+message ExecutionResponse {
+  uint32 api_version = 1;
+  ExecutionStatus status = 2;
+  bytes new_state_root = 3;
+  uint64 gas_used = 4;
+  repeated Receipt receipts = 5;
+  repeated Event events = 6;
+}
+
+// ExecutionStatus enumerates execution outcomes.
+enum ExecutionStatus {
+  EXECUTION_STATUS_UNSPECIFIED = 0;
+  EXECUTION_STATUS_OK = 1;
+  EXECUTION_STATUS_INVALID_BLOCK = 2;
+  EXECUTION_STATUS_EXECUTION_ERROR = 3;
+  EXECUTION_STATUS_OUT_OF_GAS = 4;
+}
+
+// Receipt captures per-transaction execution results.
+message Receipt {
+  uint32 tx_index = 1;
+  bool success = 2;
+  uint64 gas_used = 3;
+  uint32 result_code = 4;
+  bytes return_data = 5;
+}
+
+// Event is emitted during transaction execution.
+message Event {
+  uint32 tx_index = 1;
+  string event_type = 2;
+  repeated EventAttribute attributes = 3;
+}
+
+// EventAttribute is a key-value pair within an event.
+message EventAttribute {
+  string key = 1;
+  bytes value = 2;
+}

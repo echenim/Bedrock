@@ -1,4 +1,4 @@
-.PHONY: build test lint clean fmt
+.PHONY: build test lint proto-gen clean fmt
 
 BINARY := bedrockd
 GOFLAGS := -trimpath
@@ -11,6 +11,9 @@ test:
 
 lint:
 	golangci-lint run ./...
+
+proto-gen:
+	buf generate
 
 clean:
 	rm -f $(BINARY)

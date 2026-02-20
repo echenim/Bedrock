@@ -1,0 +1,55 @@
+syntax = "proto3";
+
+package bedrock.rpc.v1;
+
+option go_package = "github.com/echenim/Bedrock/controlplane/gen/proto/rpc/v1;rpcv1";
+
+import "types/v1/types.proto";
+import "execution/v1/execution.proto";
+
+// NodeService provides RPC access to the BedRock node.
+service NodeService {
+  // GetStatus returns the current node status.
+  rpc GetStatus(GetStatusRequest) returns (GetStatusResponse);
+
+  // GetBlock retrieves a block by height.
+  rpc GetBlock(GetBlockRequest) returns (GetBlockResponse);
+
+  // BroadcastTx submits a transaction for inclusion.
+  rpc BroadcastTx(BroadcastTxRequest) returns (BroadcastTxResponse);
+}
+
+// GetStatusRequest is empty — no parameters needed.
+message GetStatusRequest {}
+
+// GetStatusResponse returns node status information.
+message GetStatusResponse {
+  string node_id = 1;
+  string moniker = 2;
+  uint64 latest_block_height = 3;
+  bytes latest_block_hash = 4;
+  bytes latest_state_root = 5;
+  bool syncing = 6;
+}
+
+// GetBlockRequest specifies the block height to retrieve.
+message GetBlockRequest {
+  uint64 height = 1;
+}
+
+// GetBlockResponse contains the requested block.
+message GetBlockResponse {
+  bedrock.types.v1.Block block = 1;
+}
+
+// BroadcastTxRequest contains a transaction to broadcast.
+message BroadcastTxRequest {
+  bytes tx = 1;
+}
+
+// BroadcastTxResponse indicates the result of the broadcast.
+message BroadcastTxResponse {
+  bytes tx_hash = 1;
+  uint32 code = 2;
+  string log = 3;
+}
