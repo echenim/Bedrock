@@ -1,0 +1,13 @@
+/Users/itachi/Dev/PersonalDev/BedRockStudio/BedRock/SandBox/target/debug/deps/target_lexicon-1e776162f137029b.d: /Users/itachi/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/target-lexicon-0.13.5/src/lib.rs /Users/itachi/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/target-lexicon-0.13.5/src/data_model.rs /Users/itachi/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/target-lexicon-0.13.5/src/host.rs /Users/itachi/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/target-lexicon-0.13.5/src/parse_error.rs /Users/itachi/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/target-lexicon-0.13.5/src/targets.rs /Users/itachi/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/target-lexicon-0.13.5/src/triple.rs /Users/itachi/Dev/PersonalDev/BedRockStudio/BedRock/SandBox/target/debug/build/target-lexicon-3eeb2caebf1dac11/out/host.rs
+
+/Users/itachi/Dev/PersonalDev/BedRockStudio/BedRock/SandBox/target/debug/deps/libtarget_lexicon-1e776162f137029b.rmeta: /Users/itachi/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/target-lexicon-0.13.5/src/lib.rs /Users/itachi/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/target-lexicon-0.13.5/src/data_model.rs /Users/itachi/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/target-lexicon-0.13.5/src/host.rs /Users/itachi/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/target-lexicon-0.13.5/src/parse_error.rs /Users/itachi/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/target-lexicon-0.13.5/src/targets.rs /Users/itachi/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/target-lexicon-0.13.5/src/triple.rs /Users/itachi/Dev/PersonalDev/BedRockStudio/BedRock/SandBox/target/debug/build/target-lexicon-3eeb2caebf1dac11/out/host.rs
+
+/Users/itachi/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/target-lexicon-0.13.5/src/lib.rs:
+/Users/itachi/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/target-lexicon-0.13.5/src/data_model.rs:
+/Users/itachi/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/target-lexicon-0.13.5/src/host.rs:
+/Users/itachi/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/target-lexicon-0.13.5/src/parse_error.rs:
+/Users/itachi/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/target-lexicon-0.13.5/src/targets.rs:
+/Users/itachi/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/target-lexicon-0.13.5/src/triple.rs:
+/Users/itachi/Dev/PersonalDev/BedRockStudio/BedRock/SandBox/target/debug/build/target-lexicon-3eeb2caebf1dac11/out/host.rs:
+
+# env-dep:OUT_DIR=/Users/itachi/Dev/PersonalDev/BedRockStudio/BedRock/SandBox/target/debug/build/target-lexicon-3eeb2caebf1dac11/out

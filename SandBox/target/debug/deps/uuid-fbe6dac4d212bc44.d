@@ -1,0 +1,13 @@
+/Users/itachi/Dev/PersonalDev/BedRockStudio/BedRock/SandBox/target/debug/deps/uuid-fbe6dac4d212bc44.d: /Users/itachi/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/uuid-1.21.0/src/lib.rs /Users/itachi/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/uuid-1.21.0/src/macros.rs /Users/itachi/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/uuid-1.21.0/src/builder.rs /Users/itachi/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/uuid-1.21.0/src/error.rs /Users/itachi/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/uuid-1.21.0/src/non_nil.rs /Users/itachi/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/uuid-1.21.0/src/parser.rs /Users/itachi/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/uuid-1.21.0/src/fmt.rs /Users/itachi/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/uuid-1.21.0/src/timestamp.rs /Users/itachi/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/uuid-1.21.0/src/external.rs
+
+/Users/itachi/Dev/PersonalDev/BedRockStudio/BedRock/SandBox/target/debug/deps/libuuid-fbe6dac4d212bc44.rmeta: /Users/itachi/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/uuid-1.21.0/src/lib.rs /Users/itachi/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/uuid-1.21.0/src/macros.rs /Users/itachi/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/uuid-1.21.0/src/builder.rs /Users/itachi/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/uuid-1.21.0/src/error.rs /Users/itachi/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/uuid-1.21.0/src/non_nil.rs /Users/itachi/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/uuid-1.21.0/src/parser.rs /Users/itachi/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/uuid-1.21.0/src/fmt.rs /Users/itachi/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/uuid-1.21.0/src/timestamp.rs /Users/itachi/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/uuid-1.21.0/src/external.rs
+
+/Users/itachi/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/uuid-1.21.0/src/lib.rs:
+/Users/itachi/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/uuid-1.21.0/src/macros.rs:
+/Users/itachi/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/uuid-1.21.0/src/builder.rs:
+/Users/itachi/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/uuid-1.21.0/src/error.rs:
+/Users/itachi/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/uuid-1.21.0/src/non_nil.rs:
+/Users/itachi/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/uuid-1.21.0/src/parser.rs:
+/Users/itachi/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/uuid-1.21.0/src/fmt.rs:
+/Users/itachi/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/uuid-1.21.0/src/timestamp.rs:
+/Users/itachi/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/uuid-1.21.0/src/external.rs:

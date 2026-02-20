@@ -1,0 +1,17 @@
+[package]
+name = "bedrock-wasm-guest"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+description = "BedRock WASM guest module — cdylib target for deterministic execution"
+
+[lib]
+crate-type = ["cdylib"]
+
+[dependencies]
+bedrock-engine = { workspace = true }
+bedrock-primitives = { workspace = true, default-features = false }
+prost = { workspace = true }
+
+[features]
+default = []

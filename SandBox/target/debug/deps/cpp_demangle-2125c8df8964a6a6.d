@@ -1,0 +1,10 @@
+/Users/itachi/Dev/PersonalDev/BedRockStudio/BedRock/SandBox/target/debug/deps/cpp_demangle-2125c8df8964a6a6.d: /Users/itachi/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/cpp_demangle-0.4.5/src/lib.rs /Users/itachi/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/cpp_demangle-0.4.5/src/logging.rs /Users/itachi/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/cpp_demangle-0.4.5/src/ast.rs /Users/itachi/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/cpp_demangle-0.4.5/src/error.rs /Users/itachi/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/cpp_demangle-0.4.5/src/index_str.rs /Users/itachi/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/cpp_demangle-0.4.5/src/subs.rs
+
+/Users/itachi/Dev/PersonalDev/BedRockStudio/BedRock/SandBox/target/debug/deps/libcpp_demangle-2125c8df8964a6a6.rmeta: /Users/itachi/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/cpp_demangle-0.4.5/src/lib.rs /Users/itachi/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/cpp_demangle-0.4.5/src/logging.rs /Users/itachi/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/cpp_demangle-0.4.5/src/ast.rs /Users/itachi/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/cpp_demangle-0.4.5/src/error.rs /Users/itachi/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/cpp_demangle-0.4.5/src/index_str.rs /Users/itachi/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/cpp_demangle-0.4.5/src/subs.rs
+
+/Users/itachi/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/cpp_demangle-0.4.5/src/lib.rs:
+/Users/itachi/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/cpp_demangle-0.4.5/src/logging.rs:
+/Users/itachi/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/cpp_demangle-0.4.5/src/ast.rs:
+/Users/itachi/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/cpp_demangle-0.4.5/src/error.rs:
+/Users/itachi/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/cpp_demangle-0.4.5/src/index_str.rs:
+/Users/itachi/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/cpp_demangle-0.4.5/src/subs.rs:

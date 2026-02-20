@@ -1,0 +1,19 @@
+[package]
+name = "bedrock-primitives"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+description = "Core types, errors, gas accounting, cryptography, and Merkle tree for BedRock execution"
+
+[features]
+default = ["std"]
+std = []
+
+[dependencies]
+blake3 = { workspace = true }
+ed25519-dalek = { workspace = true }
+sha2 = { workspace = true }
+prost = { workspace = true }
+bytes = { workspace = true }
+thiserror = { workspace = true }
+serde = { workspace = true }

@@ -1,0 +1,27 @@
+[workspace]
+members = ["primitives", "engine", "wasm-guest"]
+resolver = "2"
+
+[workspace.package]
+version = "0.1.0"
+edition = "2021"
+license = "Apache-2.0"
+
+[workspace.dependencies]
+# Serialization
+prost = "0.13"
+prost-types = "0.13"
+bytes = "1"
+serde = { version = "1", features = ["derive"] }
+
+# Cryptography
+blake3 = "1"
+ed25519-dalek = { version = "2", features = ["alloc"] }
+sha2 = "0.10"
+
+# Error handling
+thiserror = "2"
+
+# Internal crates
+bedrock-primitives = { path = "primitives", default-features = false }
+bedrock-engine = { path = "engine" }

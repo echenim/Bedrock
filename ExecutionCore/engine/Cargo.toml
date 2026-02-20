@@ -1,0 +1,12 @@
+[package]
+name = "bedrock-engine"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+description = "BedRock deterministic block execution engine"
+
+[dependencies]
+bedrock-primitives = { workspace = true, features = ["std"] }
+prost = { workspace = true }
+bytes = { workspace = true }
+thiserror = { workspace = true }

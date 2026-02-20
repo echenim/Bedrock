@@ -1,0 +1,12 @@
+[package]
+name = "bedrock-hostapi"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+description = "BedRock host API trait definitions and types for WASM sandbox"
+
+[dependencies]
+bedrock-primitives = { workspace = true }
+thiserror = { workspace = true }
+blake3 = { workspace = true }
+ed25519-dalek = { workspace = true }

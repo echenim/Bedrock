@@ -1,0 +1,2 @@
+cargo:rerun-if-changed=build.rs
+cargo:rustc-env=DEBUG_OUTPUT_DIR=/Users/itachi/Dev/PersonalDev/BedRockStudio/BedRock/SandBox/target/debug/build/wasmtime-component-macro-c1cf4bdf8b51607d/out

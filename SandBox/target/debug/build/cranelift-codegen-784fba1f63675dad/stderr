@@ -1,0 +1,18 @@
+Writing generated file: /Users/itachi/Dev/PersonalDev/BedRockStudio/BedRock/SandBox/target/debug/build/cranelift-codegen-784fba1f63675dad/out/settings.rs
+Writing generated file: /Users/itachi/Dev/PersonalDev/BedRockStudio/BedRock/SandBox/target/debug/build/cranelift-codegen-784fba1f63675dad/out/types.rs
+Writing generated file: /Users/itachi/Dev/PersonalDev/BedRockStudio/BedRock/SandBox/target/debug/build/cranelift-codegen-784fba1f63675dad/out/opcodes.rs
+Writing generated file: /Users/itachi/Dev/PersonalDev/BedRockStudio/BedRock/SandBox/target/debug/build/cranelift-codegen-784fba1f63675dad/out/inst_builder.rs
+Writing generated file: /Users/itachi/Dev/PersonalDev/BedRockStudio/BedRock/SandBox/target/debug/build/cranelift-codegen-784fba1f63675dad/out/settings-arm64.rs
+Writing generated file: /Users/itachi/Dev/PersonalDev/BedRockStudio/BedRock/SandBox/target/debug/build/cranelift-codegen-784fba1f63675dad/out/clif_opt.isle
+Writing generated file: /Users/itachi/Dev/PersonalDev/BedRockStudio/BedRock/SandBox/target/debug/build/cranelift-codegen-784fba1f63675dad/out/clif_lower.isle
+Rebuilding /Users/itachi/Dev/PersonalDev/BedRockStudio/BedRock/SandBox/target/debug/build/cranelift-codegen-784fba1f63675dad/out/isle_opt.rs
+Writing ISLE-generated Rust code to /Users/itachi/Dev/PersonalDev/BedRockStudio/BedRock/SandBox/target/debug/build/cranelift-codegen-784fba1f63675dad/out/isle_opt.rs
+Rebuilding /Users/itachi/Dev/PersonalDev/BedRockStudio/BedRock/SandBox/target/debug/build/cranelift-codegen-784fba1f63675dad/out/isle_x64.rs
+Writing ISLE-generated Rust code to /Users/itachi/Dev/PersonalDev/BedRockStudio/BedRock/SandBox/target/debug/build/cranelift-codegen-784fba1f63675dad/out/isle_x64.rs
+Rebuilding /Users/itachi/Dev/PersonalDev/BedRockStudio/BedRock/SandBox/target/debug/build/cranelift-codegen-784fba1f63675dad/out/isle_aarch64.rs
+Writing ISLE-generated Rust code to /Users/itachi/Dev/PersonalDev/BedRockStudio/BedRock/SandBox/target/debug/build/cranelift-codegen-784fba1f63675dad/out/isle_aarch64.rs
+Rebuilding /Users/itachi/Dev/PersonalDev/BedRockStudio/BedRock/SandBox/target/debug/build/cranelift-codegen-784fba1f63675dad/out/isle_s390x.rs
+Writing ISLE-generated Rust code to /Users/itachi/Dev/PersonalDev/BedRockStudio/BedRock/SandBox/target/debug/build/cranelift-codegen-784fba1f63675dad/out/isle_s390x.rs
+Rebuilding /Users/itachi/Dev/PersonalDev/BedRockStudio/BedRock/SandBox/target/debug/build/cranelift-codegen-784fba1f63675dad/out/isle_riscv64.rs
+Writing ISLE-generated Rust code to /Users/itachi/Dev/PersonalDev/BedRockStudio/BedRock/SandBox/target/debug/build/cranelift-codegen-784fba1f63675dad/out/isle_riscv64.rs
+fatal: not a git repository (or any of the parent directories): .git
