@@ -8,7 +8,12 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var version = "0.1.0"
+// Set via -ldflags at build time.
+var (
+	version   = "0.1.0"
+	commit    = "unknown"
+	buildTime = "unknown"
+)
 
 func main() {
 	rootCmd := &cobra.Command{
@@ -34,6 +39,8 @@ func versionCmd() *cobra.Command {
 		Short: "Print version information",
 		Run: func(cmd *cobra.Command, args []string) {
 			fmt.Printf("bedrockd v%s\n", version)
+			fmt.Printf("  commit:  %s\n", commit)
+			fmt.Printf("  built:   %s\n", buildTime)
 		},
 	}
 }

@@ -1,0 +1,52 @@
+# ── Stage 1: Build Rust WASM artifact ──
+FROM rust:1.82-bookworm AS rust-builder
+
+RUN rustup target add wasm32-unknown-unknown
+
+WORKDIR /build/ExecutionCore
+COPY BedRock/ExecutionCore/ .
+RUN cargo build --release --target wasm32-unknown-unknown -p bedrock-wasm-guest
+
+WORKDIR /build/SandBox
+COPY BedRock/SandBox/ .
+RUN cargo build --release
+
+# ── Stage 2: Build Go binary ──
+FROM golang:1.24-bookworm AS go-builder
+
+ARG VERSION=dev
+ARG COMMIT=unknown
+
+WORKDIR /build/ControlPlane
+COPY BedRock/ControlPlane/go.mod BedRock/ControlPlane/go.sum ./
+RUN go mod download
+
+COPY BedRock/ControlPlane/ .
+
+RUN CGO_ENABLED=0 go build -trimpath \
+    -ldflags "-s -w -X main.version=${VERSION} -X main.commit=${COMMIT} -X main.buildTime=$(date -u +%Y-%m-%dT%H:%M:%SZ)" \
+    -o /bedrockd ./cmd/bedrockd
+
+# ── Stage 3: Runtime ──
+FROM debian:bookworm-slim
+
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends ca-certificates curl && \
+    rm -rf /var/lib/apt/lists/*
+
+RUN useradd -m -s /bin/bash bedrock
+
+COPY --from=go-builder /bedrockd /usr/local/bin/bedrockd
+COPY --from=rust-builder \
+    /build/ExecutionCore/target/wasm32-unknown-unknown/release/bedrock_wasm_guest.wasm \
+    /opt/bedrock/wasm/bedrock-execution-v0.1.0.wasm
+
+RUN chown -R bedrock:bedrock /opt/bedrock
+
+USER bedrock
+WORKDIR /home/bedrock
+
+EXPOSE 26656 26657 26700 26800 9090
+
+ENTRYPOINT ["bedrockd"]
+CMD ["start"]

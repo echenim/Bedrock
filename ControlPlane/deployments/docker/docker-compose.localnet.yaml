@@ -1,0 +1,84 @@
+version: "3.8"
+
+# 4-node BedRock local testnet in Docker.
+# Usage:
+#   cd BedRock/ControlPlane/deployments/docker
+#   docker-compose -f docker-compose.localnet.yaml up --build
+#
+# The build context is the repository root (../../..) so the Dockerfile
+# can COPY from BedRock/ExecutionCore, BedRock/SandBox, and BedRock/ControlPlane.
+
+x-node-defaults: &node-defaults
+  build:
+    context: ../../../..
+    dockerfile: BedRock/ControlPlane/deployments/docker/Dockerfile.node
+  restart: unless-stopped
+  networks:
+    - bedrock-net
+
+services:
+  # ─── Node 0 ───
+  node0:
+    <<: *node-defaults
+    container_name: bedrock-node0
+    hostname: node0
+    ports:
+      - "26656:26656"   # P2P
+      - "26657:26657"   # gRPC
+      - "26700:26700"   # HTTP
+      - "26800:26800"   # Admin
+    volumes:
+      - node0-data:/home/bedrock/.bedrockd
+    command: start --home /home/bedrock/.bedrockd
+
+  # ─── Node 1 ───
+  node1:
+    <<: *node-defaults
+    container_name: bedrock-node1
+    hostname: node1
+    ports:
+      - "26666:26656"
+      - "26667:26657"
+      - "26701:26700"
+      - "26801:26800"
+    volumes:
+      - node1-data:/home/bedrock/.bedrockd
+    command: start --home /home/bedrock/.bedrockd
+
+  # ─── Node 2 ───
+  node2:
+    <<: *node-defaults
+    container_name: bedrock-node2
+    hostname: node2
+    ports:
+      - "26676:26656"
+      - "26677:26657"
+      - "26702:26700"
+      - "26802:26800"
+    volumes:
+      - node2-data:/home/bedrock/.bedrockd
+    command: start --home /home/bedrock/.bedrockd
+
+  # ─── Node 3 ───
+  node3:
+    <<: *node-defaults
+    container_name: bedrock-node3
+    hostname: node3
+    ports:
+      - "26686:26656"
+      - "26687:26657"
+      - "26703:26700"
+      - "26803:26800"
+    volumes:
+      - node3-data:/home/bedrock/.bedrockd
+    command: start --home /home/bedrock/.bedrockd
+
+volumes:
+  node0-data:
+  node1-data:
+  node2-data:
+  node3-data:
+
+networks:
+  bedrock-net:
+    driver: bridge
