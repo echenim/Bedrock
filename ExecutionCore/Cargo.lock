@@ -57,7 +57,6 @@ version = "0.1.0"
 dependencies = [
  "bedrock-engine",
  "bedrock-primitives",
- "prost",
 ]
 
 [[package]]

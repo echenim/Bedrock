@@ -341,6 +341,21 @@ fn decode_event(r: &mut Reader<'_>) -> Result<Event, ExecError> {
     })
 }
 
+/// Encode a single `Event` to deterministic bytes.
+/// Used by the WASM guest to serialize events for `emit_event` host call.
+pub fn encode_single_event(event: &Event) -> Vec<u8> {
+    let mut buf = Vec::with_capacity(64);
+    encode_event(&mut buf, event);
+    buf
+}
+
+/// Decode a single `Event` from bytes.
+/// Used by the sandbox host to deserialize events from the guest.
+pub fn decode_single_event(data: &[u8]) -> Result<Event, ExecError> {
+    let mut r = Reader::new(data);
+    decode_event(&mut r)
+}
+
 // ── ExecutionContext encoding ──
 
 /// Encode an `ExecutionContext` to deterministic bytes.

@@ -1,0 +1,167 @@
+# ============================================================
+# OS / Editor / IDE Noise
+# ============================================================
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+*~
+.idea/
+.vscode/
+.history/
+
+# JetBrains
+*.iml
+
+# ============================================================
+# Global Build Output (Language-Agnostic)
+# ============================================================
+/bin/
+/build/
+/dist/
+/out/
+/release/
+/debug/
+/tmp/
+/artifacts/tmp/
+
+*.log
+*.pid
+
+# ============================================================
+# Go
+# ============================================================
+# Compiled binaries
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+
+# Test binaries & coverage
+*.test
+coverage.out
+*.coverprofile
+
+# Go workspace files (ignore unless intentionally used)
+go.work
+go.work.sum
+
+# Vendor (only ignore if NOT vendoring)
+# vendor/
+
+# Profiling
+*.pprof
+cpu.prof
+mem.prof
+block.prof
+
+# ============================================================
+# Rust
+# ============================================================
+# Ignore ALL target dirs recursively
+**/target/
+
+# Incremental compilation artifacts
+**/*.rs.bk
+
+# Cargo.lock policy:
+# Commit for binaries (recommended for deterministic systems)
+# Ignore only if publishing library crates
+# **/Cargo.lock
+
+# Rust coverage / profiling
+*.profraw
+*.profdata
+
+# ============================================================
+# WASM
+# ============================================================
+# Ignore generated wasm unless explicitly versioned
+**/*.wasm
+**/*.wat
+
+# Keep versioned artifacts explicitly
+!artifacts/**/*.wasm
+
+# ============================================================
+# Protobuf / Codegen
+# ============================================================
+# Generated Go
+**/*.pb.go
+**/*.pb.gw.go
+
+# Generated Rust
+**/*.pb.rs
+
+# Generated OpenAPI
+**/openapi.json
+**/swagger.json
+
+# If you intentionally version generated code, remove above lines.
+
+# ============================================================
+# Docker
+# ============================================================
+docker-compose.override.yml
+*.dockerfile.local
+
+# Build cache
+.docker/
+
+# ============================================================
+# Kubernetes
+# ============================================================
+*.kubeconfig
+kubeconfig.yaml
+
+# Helm
+charts/*/charts/
+charts/*/tmp/
+
+# ============================================================
+# Terraform / IaC
+# ============================================================
+.terraform/
+*.tfstate
+*.tfstate.*
+crash.log
+override.tf
+override.tf.json
+
+# ============================================================
+# Secrets / Environment
+# ============================================================
+.env
+.env.*
+*.pem
+*.key
+*.crt
+*.p12
+*.der
+secrets.yaml
+
+# ============================================================
+# CI / Tooling
+# ============================================================
+coverage/
+junit.xml
+test-results/
+
+# Benchmark artifacts
+benchmarks/output/
+criterion/
+
+# ============================================================
+# Database / Local Storage
+# ============================================================
+*.db
+*.sqlite
+*.sqlite3
+data/
+storage/
+
+# ============================================================
+# macOS / Linux Binaries
+# ============================================================
+*.out
