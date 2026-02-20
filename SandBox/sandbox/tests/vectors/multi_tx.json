@@ -1,0 +1,11 @@
+{
+  "name": "multi_tx",
+  "funded_accounts": [[1, 100000]],
+  "transfers": [[1, 0, 2, 1000], [1, 1, 2, 2000], [1, 2, 2, 3000]],
+  "expected_status": 0,
+  "expected_state_root": "bae8b2181980690caeea5de3a1b769d038fcb9c61d416e62bacbbf2a3cf10c7d",
+  "expected_gas_used": 14910,
+  "expected_receipt_count": 3,
+  "expected_receipts": [[true, 4970, 0], [true, 4970, 0], [true, 4970, 0]],
+  "expected_event_count": 3
+}

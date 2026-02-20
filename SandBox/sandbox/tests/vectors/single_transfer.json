@@ -1,0 +1,11 @@
+{
+  "name": "single_transfer",
+  "funded_accounts": [[1, 10000]],
+  "transfers": [[1, 0, 2, 3000]],
+  "expected_status": 0,
+  "expected_state_root": "3d20c37c21bd98576c71f8c5d6894338082609881843135828808926c2c3ba92",
+  "expected_gas_used": 4970,
+  "expected_receipt_count": 1,
+  "expected_receipts": [[true, 4970, 0]],
+  "expected_event_count": 1
+}

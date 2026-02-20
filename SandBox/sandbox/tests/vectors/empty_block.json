@@ -1,0 +1,11 @@
+{
+  "name": "empty_block",
+  "funded_accounts": [],
+  "transfers": [],
+  "expected_status": 0,
+  "expected_state_root": "0000000000000000000000000000000000000000000000000000000000000000",
+  "expected_gas_used": 0,
+  "expected_receipt_count": 0,
+  "expected_receipts": [],
+  "expected_event_count": 0
+}

@@ -118,6 +118,8 @@ dependencies = [
  "bedrock-primitives",
  "blake3",
  "ed25519-dalek",
+ "serde",
+ "serde_json",
  "thiserror 2.0.18",
  "wasmtime",
 ]
