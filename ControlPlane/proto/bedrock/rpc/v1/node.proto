@@ -1,0 +1,142 @@
+syntax = "proto3";
+
+package bedrock.rpc.v1;
+
+option go_package = "github.com/echenim/Bedrock/controlplane/gen/proto/bedrock/rpc/v1;rpcv1";
+
+import "bedrock/types/v1/types.proto";
+import "bedrock/execution/v1/execution.proto";
+
+// NodeService provides RPC access to the BedRock node.
+service NodeService {
+  // GetStatus returns the current node status.
+  rpc GetStatus(GetStatusRequest) returns (GetStatusResponse);
+
+  // SubmitTransaction submits a transaction for inclusion in the mempool.
+  rpc SubmitTransaction(SubmitTransactionRequest) returns (SubmitTransactionResponse);
+
+  // GetBlock retrieves a block by height.
+  rpc GetBlock(GetBlockRequest) returns (GetBlockResponse);
+
+  // GetReceipt retrieves the execution receipt for a transaction.
+  rpc GetReceipt(GetReceiptRequest) returns (GetReceiptResponse);
+
+  // SubscribeBlocks streams new committed blocks in real time.
+  rpc SubscribeBlocks(SubscribeBlocksRequest) returns (stream SubscribeBlocksResponse);
+
+  // QueryState queries the application state by key.
+  rpc QueryState(QueryStateRequest) returns (QueryStateResponse);
+
+  // GetValidators returns the current validator set.
+  rpc GetValidators(GetValidatorsRequest) returns (GetValidatorsResponse);
+}
+
+// ---------- GetStatus ----------
+
+// GetStatusRequest is empty — no parameters needed.
+message GetStatusRequest {}
+
+// GetStatusResponse returns node status information.
+message GetStatusResponse {
+  string node_id = 1;
+  string moniker = 2;
+  uint64 latest_block_height = 3;
+  bytes latest_block_hash = 4;
+  bytes latest_state_root = 5;
+  bool syncing = 6;
+  uint64 earliest_block_height = 7;
+  string network = 8;
+}
+
+// ---------- SubmitTransaction ----------
+
+// SubmitTransactionRequest contains a transaction to submit to the mempool.
+message SubmitTransactionRequest {
+  bytes tx = 1;
+}
+
+// SubmitTransactionResponse indicates the result of the submission.
+message SubmitTransactionResponse {
+  bytes tx_hash = 1;
+  uint32 code = 2;
+  string log = 3;
+}
+
+// ---------- GetBlock ----------
+
+// GetBlockRequest specifies the block height to retrieve.
+message GetBlockRequest {
+  uint64 height = 1;
+}
+
+// GetBlockResponse contains the requested block and its execution results.
+message GetBlockResponse {
+  bedrock.types.v1.Block block = 1;
+  bedrock.execution.v1.ExecutionResponse execution_result = 2;
+}
+
+// ---------- GetReceipt ----------
+
+// GetReceiptRequest identifies a transaction by its hash.
+message GetReceiptRequest {
+  bytes tx_hash = 1;
+}
+
+// GetReceiptResponse contains the receipt and the block it was included in.
+message GetReceiptResponse {
+  bedrock.execution.v1.Receipt receipt = 1;
+  uint64 block_height = 2;
+  bytes block_hash = 3;
+  uint32 tx_index = 4;
+}
+
+// ---------- SubscribeBlocks ----------
+
+// SubscribeBlocksRequest optionally specifies a starting height.
+message SubscribeBlocksRequest {
+  uint64 start_height = 1;
+}
+
+// SubscribeBlocksResponse streams committed blocks.
+message SubscribeBlocksResponse {
+  bedrock.types.v1.Block block = 1;
+  bedrock.execution.v1.ExecutionResponse execution_result = 2;
+}
+
+// ---------- QueryState ----------
+
+// QueryStateRequest queries the application state at a specific key and optional height.
+message QueryStateRequest {
+  bytes key = 1;
+  uint64 height = 2;
+  bool prove = 3;
+}
+
+// QueryStateResponse returns the value and an optional Merkle proof.
+message QueryStateResponse {
+  bytes key = 1;
+  bytes value = 2;
+  uint64 height = 3;
+  StateProof proof = 4;
+}
+
+// StateProof contains a Merkle proof for a state query.
+message StateProof {
+  bytes root_hash = 1;
+  bytes key = 2;
+  bytes value = 3;
+  repeated bytes path = 4;
+}
+
+// ---------- GetValidators ----------
+
+// GetValidatorsRequest optionally specifies a block height.
+message GetValidatorsRequest {
+  uint64 height = 1;
+}
+
+// GetValidatorsResponse returns the validator set at the requested height.
+message GetValidatorsResponse {
+  bedrock.types.v1.ValidatorSet validator_set = 1;
+  uint64 height = 2;
+}

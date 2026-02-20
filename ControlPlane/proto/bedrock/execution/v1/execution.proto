@@ -2,9 +2,10 @@ syntax = "proto3";
 
 package bedrock.execution.v1;
 
-option go_package = "github.com/echenim/Bedrock/controlplane/gen/proto/execution/v1;executionv1";
+option go_package = "github.com/echenim/Bedrock/controlplane/gen/proto/bedrock/execution/v1;executionv1";
 
 // ExecutionRequest is sent from consensus to the execution engine.
+// See EXECUTION_SPEC.md §3.2.
 message ExecutionRequest {
   uint32 api_version = 1;
   bytes chain_id = 2;
@@ -25,6 +26,7 @@ message ExecutionLimits {
 }
 
 // ExecutionResponse is returned from the execution engine.
+// See EXECUTION_SPEC.md §3.3.
 message ExecutionResponse {
   uint32 api_version = 1;
   ExecutionStatus status = 2;
@@ -32,6 +34,7 @@ message ExecutionResponse {
   uint64 gas_used = 4;
   repeated Receipt receipts = 5;
   repeated Event events = 6;
+  repeated LogLine logs = 7;
 }
 
 // ExecutionStatus enumerates execution outcomes.
@@ -44,6 +47,7 @@ enum ExecutionStatus {
 }
 
 // Receipt captures per-transaction execution results.
+// See EXECUTION_SPEC.md §3.4.
 message Receipt {
   uint32 tx_index = 1;
   bool success = 2;
@@ -53,6 +57,7 @@ message Receipt {
 }
 
 // Event is emitted during transaction execution.
+// See EXECUTION_SPEC.md §3.5.
 message Event {
   uint32 tx_index = 1;
   string event_type = 2;
@@ -63,4 +68,30 @@ message Event {
 message EventAttribute {
   string key = 1;
   bytes value = 2;
+}
+
+// LogLine captures a structured log entry from the execution engine.
+// See EXECUTION_SPEC.md §3.3.
+message LogLine {
+  int32 level = 1;
+  string message = 2;
+}
+
+// ExecutionContext provides block context to the execution engine
+// via the get_context host call.
+// See EXECUTION_SPEC.md §8.6.
+message ExecutionContext {
+  bytes chain_id = 1;
+  uint64 block_height = 2;
+  uint64 block_time = 3;
+  bytes block_hash = 4;
+  ExecutionLimits limits = 5;
+  ProtocolParams protocol_params = 6;
+}
+
+// ProtocolParams holds protocol-level parameters available to the execution engine.
+message ProtocolParams {
+  uint32 api_version = 1;
+  uint64 max_tx_size = 2;
+  uint64 max_block_gas = 3;
 }

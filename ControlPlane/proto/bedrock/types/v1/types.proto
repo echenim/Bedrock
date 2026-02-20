@@ -1,0 +1,130 @@
+syntax = "proto3";
+
+package bedrock.types.v1;
+
+option go_package = "github.com/echenim/Bedrock/controlplane/gen/proto/bedrock/types/v1;typesv1";
+
+// Hash is a 32-byte hash value.
+message Hash {
+  bytes value = 1;
+}
+
+// Address is a 32-byte account or validator identifier.
+message Address {
+  bytes value = 1;
+}
+
+// BlockHeader contains block metadata for consensus.
+// See SPEC.md §4.1.
+message BlockHeader {
+  uint64 height = 1;
+  uint64 round = 2;
+  bytes parent_hash = 3;
+  bytes state_root = 4;
+  bytes tx_root = 5;
+  bytes proposer_id = 6;
+  uint64 block_time = 7;
+  bytes chain_id = 8;
+  bytes block_hash = 9;
+}
+
+// Transaction wraps opaque transaction bytes.
+message Transaction {
+  bytes data = 1;
+}
+
+// Block contains a header, a list of transactions, and an optional quorum certificate.
+// See SPEC.md §4.1.
+message Block {
+  BlockHeader header = 1;
+  repeated Transaction transactions = 2;
+  QuorumCertificate qc = 3;
+}
+
+// QuorumCertificate proves that >= 2f+1 validators voted for a block.
+// See SPEC.md §4.2.
+message QuorumCertificate {
+  bytes block_hash = 1;
+  uint64 round = 2;
+  repeated VoteSignature votes = 3;
+  bytes aggregated_sig = 4;
+}
+
+// VoteSignature is a single validator's vote within a QC.
+message VoteSignature {
+  bytes voter_id = 1;
+  bytes signature = 2;
+}
+
+// Vote is cast by a validator for a proposed block.
+// See SPEC.md §4.3.
+message Vote {
+  bytes block_hash = 1;
+  uint64 height = 2;
+  uint64 round = 3;
+  bytes voter_id = 4;
+  bytes signature = 5;
+}
+
+// Proposal is broadcast by the round leader containing a block and signature.
+// See SPEC.md §6.
+message Proposal {
+  Block block = 1;
+  uint64 round = 2;
+  bytes proposer_id = 3;
+  bytes signature = 4;
+}
+
+// TimeoutMessage is sent when a validator's round timer expires.
+// See SPEC.md §10.
+message TimeoutMessage {
+  uint64 height = 1;
+  uint64 round = 2;
+  bytes voter_id = 3;
+  bytes signature = 4;
+  QuorumCertificate high_qc = 5;
+}
+
+// Validator describes a validator in the active set.
+message Validator {
+  bytes address = 1;
+  bytes public_key = 2;
+  uint64 voting_power = 3;
+}
+
+// ValidatorSet is the complete set of validators for an epoch.
+// See SPEC-v0.2.md §7.
+message ValidatorSet {
+  repeated Validator validators = 1;
+  uint64 epoch = 2;
+  uint64 total_voting_power = 3;
+}
+
+// SlashingEvidence wraps evidence of a validator misbehaviour.
+// See SPEC-v0.2.md §6.
+message SlashingEvidence {
+  oneof evidence {
+    DoubleVoteEvidence double_vote = 1;
+    DoubleProposalEvidence double_proposal = 2;
+  }
+  uint64 height = 3;
+  uint64 timestamp = 4;
+}
+
+// DoubleVoteEvidence proves a validator voted for two different blocks
+// in the same round — a slashable offence.
+// See SPEC-v0.2.md §6 Slashing Condition 2.
+message DoubleVoteEvidence {
+  Vote vote_a = 1;
+  Vote vote_b = 2;
+  bytes validator_id = 3;
+}
+
+// DoubleProposalEvidence proves a validator proposed two different blocks
+// in the same round — a slashable offence.
+// See SPEC-v0.2.md §6 Slashing Condition 1.
+message DoubleProposalEvidence {
+  Proposal proposal_a = 1;
+  Proposal proposal_b = 2;
+  bytes validator_id = 3;
+}
