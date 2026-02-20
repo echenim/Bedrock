@@ -1,0 +1,14 @@
+/Users/itachi/Dev/PersonalDev/BedRockStudio/BedRock/SandBox/target/debug/deps/bedrock_primitives-465640028049197f.d: /Users/itachi/Dev/PersonalDev/BedRockStudio/BedRock/ExecutionCore/primitives/src/lib.rs /Users/itachi/Dev/PersonalDev/BedRockStudio/BedRock/ExecutionCore/primitives/src/types.rs /Users/itachi/Dev/PersonalDev/BedRockStudio/BedRock/ExecutionCore/primitives/src/error.rs /Users/itachi/Dev/PersonalDev/BedRockStudio/BedRock/ExecutionCore/primitives/src/gas.rs /Users/itachi/Dev/PersonalDev/BedRockStudio/BedRock/ExecutionCore/primitives/src/block.rs /Users/itachi/Dev/PersonalDev/BedRockStudio/BedRock/ExecutionCore/primitives/src/execution.rs /Users/itachi/Dev/PersonalDev/BedRockStudio/BedRock/ExecutionCore/primitives/src/crypto.rs /Users/itachi/Dev/PersonalDev/BedRockStudio/BedRock/ExecutionCore/primitives/src/merkle.rs /Users/itachi/Dev/PersonalDev/BedRockStudio/BedRock/ExecutionCore/primitives/src/state.rs /Users/itachi/Dev/PersonalDev/BedRockStudio/BedRock/ExecutionCore/primitives/src/codec.rs
+
+/Users/itachi/Dev/PersonalDev/BedRockStudio/BedRock/SandBox/target/debug/deps/libbedrock_primitives-465640028049197f.rmeta: /Users/itachi/Dev/PersonalDev/BedRockStudio/BedRock/ExecutionCore/primitives/src/lib.rs /Users/itachi/Dev/PersonalDev/BedRockStudio/BedRock/ExecutionCore/primitives/src/types.rs /Users/itachi/Dev/PersonalDev/BedRockStudio/BedRock/ExecutionCore/primitives/src/error.rs /Users/itachi/Dev/PersonalDev/BedRockStudio/BedRock/ExecutionCore/primitives/src/gas.rs /Users/itachi/Dev/PersonalDev/BedRockStudio/BedRock/ExecutionCore/primitives/src/block.rs /Users/itachi/Dev/PersonalDev/BedRockStudio/BedRock/ExecutionCore/primitives/src/execution.rs /Users/itachi/Dev/PersonalDev/BedRockStudio/BedRock/ExecutionCore/primitives/src/crypto.rs /Users/itachi/Dev/PersonalDev/BedRockStudio/BedRock/ExecutionCore/primitives/src/merkle.rs /Users/itachi/Dev/PersonalDev/BedRockStudio/BedRock/ExecutionCore/primitives/src/state.rs /Users/itachi/Dev/PersonalDev/BedRockStudio/BedRock/ExecutionCore/primitives/src/codec.rs
+
+/Users/itachi/Dev/PersonalDev/BedRockStudio/BedRock/ExecutionCore/primitives/src/lib.rs:
+/Users/itachi/Dev/PersonalDev/BedRockStudio/BedRock/ExecutionCore/primitives/src/types.rs:
+/Users/itachi/Dev/PersonalDev/BedRockStudio/BedRock/ExecutionCore/primitives/src/error.rs:
+/Users/itachi/Dev/PersonalDev/BedRockStudio/BedRock/ExecutionCore/primitives/src/gas.rs:
+/Users/itachi/Dev/PersonalDev/BedRockStudio/BedRock/ExecutionCore/primitives/src/block.rs:
+/Users/itachi/Dev/PersonalDev/BedRockStudio/BedRock/ExecutionCore/primitives/src/execution.rs:
+/Users/itachi/Dev/PersonalDev/BedRockStudio/BedRock/ExecutionCore/primitives/src/crypto.rs:
+/Users/itachi/Dev/PersonalDev/BedRockStudio/BedRock/ExecutionCore/primitives/src/merkle.rs:
+/Users/itachi/Dev/PersonalDev/BedRockStudio/BedRock/ExecutionCore/primitives/src/state.rs:
+/Users/itachi/Dev/PersonalDev/BedRockStudio/BedRock/ExecutionCore/primitives/src/codec.rs:

@@ -9,7 +9,7 @@ description = "BedRock WASM guest module — cdylib target for deterministic exe
 crate-type = ["cdylib"]
 
 [dependencies]
-bedrock-engine = { workspace = true }
+bedrock-engine = { workspace = true, default-features = false }
 bedrock-primitives = { workspace = true, default-features = false }
 prost = { workspace = true }
 

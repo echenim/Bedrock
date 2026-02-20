@@ -7,7 +7,7 @@ description = "Core types, errors, gas accounting, cryptography, and Merkle tree
 
 [features]
 default = ["std"]
-std = []
+std = ["rand", "ed25519-dalek/rand_core"]
 
 [dependencies]
 blake3 = { workspace = true }
@@ -17,3 +17,4 @@ prost = { workspace = true }
 bytes = { workspace = true }
 thiserror = { workspace = true }
 serde = { workspace = true }
+rand = { workspace = true, optional = true }

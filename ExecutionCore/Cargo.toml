@@ -18,10 +18,11 @@ serde = { version = "1", features = ["derive"] }
 blake3 = "1"
 ed25519-dalek = { version = "2", features = ["alloc"] }
 sha2 = "0.10"
+rand = "0.8"
 
 # Error handling
 thiserror = "2"
 
 # Internal crates
 bedrock-primitives = { path = "primitives", default-features = false }
-bedrock-engine = { path = "engine" }
+bedrock-engine = { path = "engine", default-features = false }

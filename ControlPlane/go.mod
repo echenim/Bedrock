@@ -1,3 +1,3 @@
-module github.com/bedrock-protocol/controlplane
+module github.com/echenim/Bedrock/controlplane
 
 go 1.22.0
