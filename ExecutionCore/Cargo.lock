@@ -32,6 +32,7 @@ version = "0.1.0"
 dependencies = [
  "bedrock-primitives",
  "bytes",
+ "ed25519-dalek",
  "prost",
  "thiserror",
 ]

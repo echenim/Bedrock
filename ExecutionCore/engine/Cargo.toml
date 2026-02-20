@@ -7,10 +7,11 @@ description = "BedRock deterministic block execution engine"
 
 [features]
 default = ["std"]
-std = ["bedrock-primitives/std"]
+std = ["bedrock-primitives/std", "ed25519-dalek"]
 
 [dependencies]
 bedrock-primitives = { workspace = true }
 prost = { workspace = true }
 bytes = { workspace = true }
 thiserror = { workspace = true }
+ed25519-dalek = { workspace = true, optional = true }
